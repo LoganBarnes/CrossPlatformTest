@@ -1,0 +1,17 @@
+# QT Creator #
+##############
+*.user
+*.stash
+
+# Compiled Source #
+###################
+build/
+
+# OS Generated Files #
+######################
+*.DS_Store
+
+# Valgrind #
+############
+*.supp
+
