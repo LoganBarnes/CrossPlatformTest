@@ -1,6 +1,21 @@
-#define GLFW_INCLUDE_GL_3
 #include <iostream>
-//#include "GL/glew.h"
+
+// THIS IS OPTIONAL AND NOT REQUIRED, ONLY USE THIS IF YOU DON'T WANT GLAD TO INCLUDE windows.h
+// GLAD will include windows.h for APIENTRY if it was not previously defined.
+// Make sure you have the correct definition for APIENTRY for platforms which define _WIN32 but don't use __stdcall
+#ifdef _WIN32
+#define APIENTRY __stdcall
+#endif
+
+// GLAD
+#include <glad/glad.h>
+
+// confirm that GLAD didn't include windows.h
+#ifdef _WINDOWS_
+#error windows.h was included!
+#endif
+
+#define GLFW_INCLUDE_GL_3
 #include "GLFW/glfw3.h"
 
 
@@ -42,6 +57,9 @@ main( void )
   }
 
   glfwSetErrorCallback( error_callback );
+  
+  int WIDTH  = 640;
+  int HEIGHT = 480;
 
 
   glfwWindowHint( GLFW_CONTEXT_VERSION_MAJOR,                 3 );
@@ -50,7 +68,7 @@ main( void )
   glfwWindowHint( GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE );
   glfwWindowHint( GLFW_RESIZABLE,                      GL_FALSE );
 
-  window = glfwCreateWindow( 640, 480, "Windows Test", 0, 0 );
+  window = glfwCreateWindow( WIDTH, HEIGHT, "Windows Test", 0, 0 );
 
   if ( !window )
   {
@@ -65,12 +83,15 @@ main( void )
   glfwSetKeyCallback( window, key_callback );
 
 
-//  if ( !initGLEW( ) )
-//  {
+  if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
+  {
+	  std::cout << "Failed to initialize OpenGL context" << std::endl;
+	  return -1;
+  }
 
-//    return -1;
-
-//  }
+  // Define the viewport dimensions and clear color
+  glViewport(0, 0, WIDTH, HEIGHT);
+  glClearColor(1.f, 0.5f, 0.1f, 1.f);
 
 
 
@@ -79,6 +100,8 @@ main( void )
 
   while ( !glfwWindowShouldClose( window ) )
   {
+	
+	glClear(GL_COLOR_BUFFER_BIT);
 
     glfwSwapBuffers( window );
     glfwPollEvents( );
