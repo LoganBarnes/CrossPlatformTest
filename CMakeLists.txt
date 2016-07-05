@@ -86,15 +86,20 @@ install (
          )
 
 install(
-	    TARGETS crossPlatform
+        TARGETS crossPlatform
         RUNTIME DESTINATION bin
         LIBRARY DESTINATION lib
         )
 
-add_custom_command(
-	               TARGET crossPlatform POST_BUILD
-                   COMMAND ${CMAKE_COMMAND} -E copy_if_different
-                   "${PROJECT_BINARY_DIR}/libs/glfw/src/$<CONFIGURATION>/glfw3.dll"
-                   $<TARGET_FILE_DIR:crossPlatform>
-                   )
+#
+# copy .dlls to same directory on windows
+#
+if ( WIN32 )
+  add_custom_command(
+                     TARGET crossPlatform POST_BUILD
+                     COMMAND ${CMAKE_COMMAND} -E copy_if_different
+                     "${PROJECT_BINARY_DIR}/libs/glfw/src/$<CONFIGURATION>/glfw3.dll"
+                     $<TARGET_FILE_DIR:crossPlatform>
+                     )
+endif()
 
